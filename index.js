@@ -1,0 +1,66 @@
+/**
+ * @license
+ * Copyright 2022 MIT
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/**
+ * @fileoverview Plugin test.
+ */
+
+import * as Blockly from 'blockly';
+import {toolboxCategories, createPlayground} from '@blockly/dev-tools';
+import {Multiselect, MultiselectBlockDragger} from '../src/index';
+import {ScrollOptions, ScrollBlockDragger, ScrollMetricsManager} from '@blockly/plugin-scroll-options';
+
+/**
+ * Create a workspace.
+ * @param {HTMLElement} blocklyDiv The blockly container div.
+ * @param {!Blockly.BlocklyOptions} options The Blockly options.
+ * @return {!Blockly.WorkspaceSvg} The created workspace.
+ */
+function createWorkspace(blocklyDiv, options) {
+  const workspace = Blockly.inject(blocklyDiv, options);
+
+  // Initialize plugin.
+  const plugin = new ScrollOptions(workspace);
+  plugin.init();
+
+  const multiselectPlugin = new Multiselect(workspace);
+  multiselectPlugin.init(options);
+
+  workspace.getInjectionDiv().focus();
+  return workspace;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  const defaultOptions = {
+    toolbox: toolboxCategories,
+    useDoubleClick: true,
+    bumpNeighbours: false,
+    multiselectIcon: {
+      hideIcon: false,
+      enabledIcon: 'media/select.svg',
+      disabledIcon: 'media/unselect.svg',
+    },
+    grid: {
+      spacing: 25,
+      length: 3,
+      colour: '#ccc',
+      snap: true,
+    },
+    move: {
+      wheel: true,
+    },
+    zoom: {
+      wheel: true,
+    },
+    baseBlockDragger: ScrollBlockDragger,
+    plugins: {
+      'blockDragger': MultiselectBlockDragger,
+      'metricsManager': ScrollMetricsManager,
+    },
+  };
+  createPlayground(document.getElementById('root'), createWorkspace,
+      defaultOptions);
+});
