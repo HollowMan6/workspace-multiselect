@@ -39,6 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
     bumpNeighbours: false,
     multiselectIcon: {
       hideIcon: false,
+      weight: 3,
       enabledIcon: 'media/select.svg',
       disabledIcon: 'media/unselect.svg',
     },
