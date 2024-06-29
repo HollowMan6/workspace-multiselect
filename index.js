@@ -47,6 +47,7 @@ document.addEventListener('DOMContentLoaded', function() {
       enabledIcon: 'media/select.svg',
       disabledIcon: 'media/unselect.svg',
     },
+    multiSelectKeys: ['Shift', 'Control'],
     multiselectCopyPaste: {
       crossTab: true,
       menu: true,
