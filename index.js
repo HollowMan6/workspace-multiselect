@@ -10,9 +10,10 @@
 
 import * as Blockly from 'blockly';
 import {toolboxCategories, createPlayground} from '@blockly/dev-tools';
-import {Multiselect, MultiselectBlockDragger} from '../src/index';
+import {Multiselect} from '../src/index';
 import {ScrollOptions, ScrollBlockDragger, ScrollMetricsManager} from '@blockly/plugin-scroll-options';
 import {Backpack} from '@blockly/workspace-backpack';
+import {NavigationController} from '@blockly/keyboard-navigation';
 
 /**
  * Create a workspace.
@@ -23,13 +24,22 @@ import {Backpack} from '@blockly/workspace-backpack';
 function createWorkspace(blocklyDiv, options) {
   const workspace = Blockly.inject(blocklyDiv, options);
 
-  // Initialize plugin.
+  Blockly.ContextMenuItems.registerCommentOptions();
+
+  // Initialize scroll options plugin.
   const plugin = new ScrollOptions(workspace);
   plugin.init();
 
+  // Initialize backpack plugin.
   const backpack = new Backpack(workspace);
   backpack.init();
 
+  // Initialize keyboard nav plugin.
+  const navigationController = new NavigationController();
+  navigationController.init();
+  navigationController.addWorkspace(workspace);
+
+  // Initialize multiselect plugin.
   const multiselectPlugin = new Multiselect(workspace);
   multiselectPlugin.init(options);
 
@@ -41,13 +51,14 @@ document.addEventListener('DOMContentLoaded', function() {
     toolbox: toolboxCategories,
     useDoubleClick: true,
     bumpNeighbours: false,
+    multiFieldUpdate: true,
     multiselectIcon: {
       hideIcon: false,
       weight: 3,
       enabledIcon: 'media/select.svg',
       disabledIcon: 'media/unselect.svg',
     },
-    multiSelectKeys: ['Shift', 'Control'],
+    multiSelectKeys: ['Shift'],
     multiselectCopyPaste: {
       crossTab: true,
       menu: true,
@@ -64,10 +75,12 @@ document.addEventListener('DOMContentLoaded', function() {
     zoom: {
       wheel: true,
     },
-    baseBlockDragger: ScrollBlockDragger,
     plugins: {
-      'blockDragger': MultiselectBlockDragger,
-      'metricsManager': ScrollMetricsManager,
+      // These are both required.
+      // Note that the ScrollBlockDragger drags things besides blocks.
+      // Block is included in the name for backwards compatibility.
+      blockDragger: ScrollBlockDragger,
+      metricsManager: ScrollMetricsManager,
     },
   };
   createPlayground(document.getElementById('root'), createWorkspace,
