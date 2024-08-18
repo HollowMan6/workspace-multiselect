@@ -42,6 +42,10 @@ function createWorkspace(blocklyDiv, options) {
   return workspace;
 }
 
+Blockly.ContextMenuItems.registerCommentOptions();
+// Initialize keyboard nav plugin.
+navigationController.init();
+
 document.addEventListener('DOMContentLoaded', function() {
   const defaultOptions = {
     toolbox: toolboxCategories,
@@ -79,9 +83,6 @@ document.addEventListener('DOMContentLoaded', function() {
       metricsManager: ScrollMetricsManager,
     },
   };
-  Blockly.ContextMenuItems.registerCommentOptions();
-  // Initialize keyboard nav plugin.
-  navigationController.init();
   createWorkspace(document.getElementById('primaryDiv'),
       defaultOptions);
   createWorkspace(document.getElementById('secondaryDiv'),
