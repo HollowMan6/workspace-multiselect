@@ -13,7 +13,9 @@ import {toolboxCategories} from '@blockly/dev-tools';
 import {Multiselect} from '../src/index';
 import {ScrollOptions, ScrollBlockDragger, ScrollMetricsManager} from '@blockly/plugin-scroll-options';
 import {Backpack} from '@blockly/workspace-backpack';
+import {NavigationController} from '@blockly/keyboard-navigation';
 
+const navigationController = new NavigationController();
 /**
  * Create a workspace.
  * @param {HTMLElement} blocklyDiv The blockly container div.
@@ -30,6 +32,8 @@ function createWorkspace(blocklyDiv, options) {
   // Initialize backpack plugin.
   const backpack = new Backpack(workspace);
   backpack.init();
+
+  navigationController.addWorkspace(workspace);
 
   // Initialize multiselect plugin.
   const multiselectPlugin = new Multiselect(workspace);
@@ -75,6 +79,9 @@ document.addEventListener('DOMContentLoaded', function() {
       metricsManager: ScrollMetricsManager,
     },
   };
+  Blockly.ContextMenuItems.registerCommentOptions();
+  // Initialize keyboard nav plugin.
+  navigationController.init();
   createWorkspace(document.getElementById('primaryDiv'),
       defaultOptions);
   createWorkspace(document.getElementById('secondaryDiv'),
